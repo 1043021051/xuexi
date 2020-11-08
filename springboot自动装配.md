@@ -14,3 +14,4 @@ SpringBoot 它的外表轻巧简单，但是它的里面就像一只巨大的怪
 @SpringBootConfiguration注解发现他里面没有太多东西，只是对 @Configuration注解进行了一个封装。
 
 简而言之，它就是一个 @Configuration 注解而已。
+![Image text](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f87059b3994941579f044aa540d20711~tplv-k3u1fbpfcp-zoom-1.image)
