@@ -37,3 +37,81 @@ public class Logger {
 }
 
 ```
+
+#### 2. 目标程序
+
+```
+public class AccountServiceImpl implements AccountService {
+    public void saveAccount() {
+        System.out.println("执行了保存");
+    }
+
+    public void updateAccount(int i) {
+        System.out.println("执行了更新");
+    }
+
+    public int deleteAccount() {
+        System.out.println("执行了删除");
+        return 0;
+    }
+}
+#### 3. 配置切面，确定连接点，设置切入点和通知
+```
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 配置 spring 的 IOC，把 service 对象配置进来-->
+    <bean id="accountService" class="com.manman.service.impl.AccountServiceImpl"></bean>
+
+    <!-- spring 中基于 xml 的 AOP 配置步骤
+        1. 把通知 bean 也交给 spring 管理
+        2. 使用 aop:config 标签标识开始 AOP 的配置
+        3. 使用 aop:aspect 标签表明配置切面
+            id 属性：给切面提供一个唯一标识
+            ref 属性：是指定通知类的 id。
+        4. 在 aop:aspect 标签的内部使用对应的标签来配置通知的类型
+           我们现在示例是让 pringLog 方法在切入点方法执行之前执行，所以是前置通知。
+           aop:before：表示配置前置通知。
+                method 属性：用于指定 Logger 类中哪个方法是前置通知。
+                pointcut 属性：用于指定切入点表达式，该表达式的含义指的是对业务层中哪些方法增强
+                    关键字：execution(表达式)
+                    表达式：访问修饰符 返回值 包名 类名 方法名（参数列表）
+                    public void com.manman.service.impl.AccountServiceImpl.saveAccount()
+    -->
+
+    <!-- 配置 Logger 类-->
+    <bean id="logger" class="com.manman.utils.Logger"></bean>
+    <!-- 配置 AOP -->
+    <aop:config>
+        <!-- 配置切面 -->
+        <aop:aspect id="logAdvice" ref="logger">
+            <!-- 配置通知的类型，并且建立通知方法和切入点方法的关联 -->
+            <aop:before method="printLog" pointcut="execution(public void com.manman.service.impl.AccountServiceImpl.*)"></aop:before>
+        </aop:aspect>
+    </aop:config>
+</beans>
+#### 4. 测试
+
+```
+public class Test {
+    public static void main(String[] args) {
+        // 1. 获取容器
+        ApplicationContext ac = new ClassPathXmlApplicationContext("beans.xml");
+        // 2. 获取对象
+        AccountService as = (AccountService)ac.getBean("accountService");
+        // 3. 执行方法
+        as.saveAccount();
+    }
+}
+```
+执行流程 
+----
+
+在运行中调用 as.saveAccount() 方法，会先找到其对象 AccountService，判断该对象是否是某个切面对象的目标对象。若是的话，则会在内存中开辟一个空间，创建一个代理对象，该对象有目标对象的所有方法（即连接点），而被调用的方法为切入点。在代理对象的对应切入点方法中将切面和切入点进行织入。调用代理对象的对应切入点方法。
+
+
