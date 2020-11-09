@@ -55,6 +55,8 @@ public class AccountServiceImpl implements AccountService {
         return 0;
     }
 }
+```
+
 #### 3. 配置切面，确定连接点，设置切入点和通知
 ```
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -95,6 +97,7 @@ public class AccountServiceImpl implements AccountService {
         </aop:aspect>
     </aop:config>
 </beans>
+```
 #### 4. 测试
 
 ```
