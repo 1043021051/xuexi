@@ -24,8 +24,89 @@ public void method()
 }
 ```
 
-synchronized可以用在方法上也可以使用在代码块中，其中方法是实例方法和静态方法分别锁的是该类的实例对象和该类的对象。而使用在代码块中也可以分为三种，具体的可以看上面的表格。这里的需要注意的是：如果锁的是类对象的话，尽管new多个实例对象，但他们仍然是属于同一个类依然会被锁住，即线程之间保证同步关系。
-现在我们已经知道了怎样synchronized了，看起来很简单，拥有了这个关键字就真的可以在并发编程中得心应手了吗？爱学的你，就真的不想知道synchronized底层是怎样实现了吗？
+synchronized可以用在方法上也可以使用在代码块中，其中方法是实例方法和静态方法分别锁的是该类的实例对象和该类的对象。
+而使用在代码块中也可以分为三种  
+
+这里的需要注意的是：如果锁的是类对象的话，尽管new多个实例对象，但他们仍然是属于同一个类依然会被锁住，即线程之间保证同步关系。
+现在我们已经知道了怎样synchronized了，看起来很简单，拥有了这个关键字就真的可以在并发编程中得心应手.
+
+### 加锁和不加锁对比
+（1）synchronized：可以在任意对象及方法上加锁，而加锁的这段代码称为“互斥区”或“临界区”。
+
+（2）不使用synchronized实例（代码A）：
+```
+public class MyThread extends Thread {
+
+    private int count = 5;
+
+    @Override
+    public void run() {
+        count--;
+        System.out.println(this.currentThread().getName() + " count:" + count);
+    }
+
+    public static void main(String[] args) {
+        MyThread myThread = new MyThread();
+        Thread thread1 = new Thread(myThread, "thread1");
+        Thread thread2 = new Thread(myThread, "thread2");
+        Thread thread3 = new Thread(myThread, "thread3");
+        Thread thread4 = new Thread(myThread, "thread4");
+        Thread thread5 = new Thread(myThread, "thread5");
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
+        thread5.start();
+    }
+}
+```
+输出结果:
+```
+thread3 count:2
+thread4 count:1
+thread1 count:2
+thread2 count:3
+thread5 count:0
+```
+可以看到，上述的结果是不正确的，这是因为，多个线程同时操作run（）方法，对count进行修改，进而造成错误。<br>
+3）使用synchronized实例（代码B）:
+```
+public class MyThread extends Thread {
+
+    private int count = 5;
+
+    @Override
+    public synchronized void run() {
+        count--;
+        System.out.println(this.currentThread().getName() + " count:" + count);
+    }
+
+    public static void main(String[] args) {
+        MyThread myThread = new MyThread();
+        Thread thread1 = new Thread(myThread, "thread1");
+        Thread thread2 = new Thread(myThread, "thread2");
+        Thread thread3 = new Thread(myThread, "thread3");
+        Thread thread4 = new Thread(myThread, "thread4");
+        Thread thread5 = new Thread(myThread, "thread5");
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
+        thread5.start();
+    }
+}
+```
+输出结果:
+```
+thread1 count:4
+thread2 count:3
+thread3 count:2
+thread5 count:1
+thread4 count:0
+```
+可以看出: <br>
+当多个线程访问MyThread 的run方法的时候，如果使用了synchronized修饰，那个多线程就会以排队的方式进行处理（这里排队是按照CPU分配的先后顺序而定的），一个线程想要执行synchronized修饰的方法里的代码，首先是尝试获得锁，如果拿到锁，执行synchronized代码体的内容，如果拿不到锁的话，这个线程就会不断的尝试获得这把锁，直到拿到为止，而且多个线程同时去竞争这把锁，也就是会出现锁竞争的问题。
+
 ### 修饰代码块
 1）一个线程访问一个对象中的synchronized(this)同步代码块时，其他试图访问该对象的线程将被阻塞
 ``Demo一``
@@ -86,9 +167,7 @@ Thread-1:8
 Thread-1:9
 
 ```
-
-
-
+当两个并发线程(thread1和thread2)访问同一个对象(syncThread)中的synchronized代码块时，在同一时刻只能有一个线程得到执行，另一个线程受阻塞，必须等待当前线程执行完这个代码块以后才能执行该代码块。Thread1和thread2是互斥的，因为在执行synchronized代码块时会锁定当前的对象，只有执行完该代码块才能释放该对象锁，下一个线程才能执行并锁定该对象
 ### 使用场景
 1.批量导入异步导入插入数据时的并发问题:  </br>
 方案:
