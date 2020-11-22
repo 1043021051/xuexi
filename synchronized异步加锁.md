@@ -167,7 +167,48 @@ Thread-1:8
 Thread-1:9
 
 ```
-当两个并发线程(thread1和thread2)访问同一个对象(syncThread)中的synchronized代码块时，在同一时刻只能有一个线程得到执行，另一个线程受阻塞，必须等待当前线程执行完这个代码块以后才能执行该代码块。Thread1和thread2是互斥的，因为在执行synchronized代码块时会锁定当前的对象，只有执行完该代码块才能释放该对象锁，下一个线程才能执行并锁定该对象
+当两个并发线程(thread1和thread2)访问同一个对象(syncThread)中的synchronized代码块时，在同一时刻只能有一个线程得到执行，另一个线程受阻塞，必须等待当前线程执行完这个代码块以后才能执行该代码块。Thread1和thread2是互斥的，因为在执行synchronized代码块时会锁定当前的对象，只有执行完该代码块才能释放该对象锁，下一个线程才能执行并锁定该对象.
+
+
+### 对象锁的同步和异步
+（1）同步：synchronized
+
+同步的概念就是共享，我们要知道“共享”这两个字，如果不是共享的资源，就没有必要进行同步，也就是没有必要进行加锁；
+
+同步的目的就是为了线程的安全，其实对于线程的安全，需要满足两个最基本的特性：原子性和可见性;
+
+（2）异步：asynchronized
+
+异步的概念就是独立，相互之间不受到任何制约，两者之间没有任何关系。
+
+```
+public class MyObject {
+
+    public void method() {
+        System.out.println(Thread.currentThread().getName());
+    }
+
+    public static void main(String[] args) {
+        final MyObject myObject = new MyObject();
+
+        Thread t1 = new Thread(new Runnable() {
+            public void run() {
+                myObject.method();
+            }
+        }, "t1");
+
+        Thread t2 = new Thread(new Runnable() {
+            public void run() {
+                myObject.method();
+            }
+        }, "t2");
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
 ### 使用场景
 1.批量导入异步导入插入数据时的并发问题:  </br>
 方案:
