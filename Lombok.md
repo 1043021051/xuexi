@@ -141,4 +141,42 @@ public class MyAnnotaionProcessor extends AbstractProcessor {
 }
 复制代码
 ```
+## 五、运用
+1.@Valid 或者@Validated 用于入参验证,验证失败会抛出异常.可以增加一个控制类(分组验证):
+```
+package com.valid.controller;  
+  
+import org.springframework.stereotype.Controller;  
+import org.springframework.validation.BindingResult;  
+import org.springframework.validation.annotation.Validated;  
+import org.springframework.web.bind.annotation.RequestMapping;  
+import org.springframework.web.bind.annotation.ResponseBody;  
+  
+import com.valid.interfaces.Group;  
+import com.valid.pojo.People;  
+import com.valid.pojo.Person;  
+  
+@Controller  
+public class FirstController {  
+      
+    @RequestMapping("/addPeople")  
+    //不需验证ID  
+    public @ResponseBody String addPeople(@Validated({Group.class}) People p,BindingResult result)  
+    {  
+        if(result.hasErrors())  
+        {  
+            return "0";  
+        }  
+        return "1";  
+    }  
+}
+
+```
+2. @Data 使用:
+
+** 1)、@Data可以为类提供读写功能，从而不用写get、set方法。
+** 2、他还会为类提供 equals()、hashCode()、toString() 方法。
+
+
+
 
