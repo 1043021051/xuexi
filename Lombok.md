@@ -134,7 +134,7 @@ public class MyAnnotaionProcessor extends AbstractProcessor {
 复制代码
 ```
 ## 五、运用
-1.@Valid 或者@Validated 用于入参验证,验证失败会抛出异常.可以增加一个控制类(分组验证):
+#### 1.@Valid 或者@Validated 用于入参验证,验证失败会抛出异常.可以增加一个控制类(分组验证):
 ```
 package com.valid.controller;  
   
@@ -164,8 +164,9 @@ public class FirstController {
 }
 
 ```
-2. 简化我们的代码:
-**例如 @Data 使用:  
+#### 2.简化我们的代码:
+
+例如 @Data 使用:  
 
 **1)、@Data可以为类提供读写功能，从而不用写get、set方法。**  
 
