@@ -165,9 +165,12 @@ public class FirstController {
 
 ```
 2. 简化我们的代码:
-*例如 @Data 使用:
-**1)、@Data可以为类提供读写功能，从而不用写get、set方法。
-**2)、他还会为类提供 equals()、hashCode()、toString() 方法。
+**例如 @Data 使用:  
+
+**1)、@Data可以为类提供读写功能，从而不用写get、set方法。**  
+
+**2)、他还会为类提供 equals()、hashCode()、toString() 方法。**  
+
 
 
 
