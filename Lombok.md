@@ -89,13 +89,7 @@ lombok能够达到的效果就是在源码中不需要写一些通用的方法�
 
 说道 Lombok，我们就得去提到 JSR 269: Pluggable Annotation Processing API  。JSR 269 之前我们也有注解这样的神器，可是我们比如想要做什么必须使用反射，反射的方法局限性较大。**首先，它必须定义@Retention为RetentionPolicy.RUNTIME，只能在运行时通过反射来获取注解值，使得运行时代码效率降低**。其次，如果想在编译阶段利用注解来进行一些检查，对用户的某些不合理代码给出错误报告，反射的使用方法就无能为力了。**而 JSR 269 之后我们可以在 Javac的编译期利用注解做这些事情**。所以我们发现**核心的区分是在 运行期 还是 编译期**。
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0a46ae3be96647d4bcd6c796325e69b3~tplv-k3u1fbpfcp-watermark.image)
-
-从上图可知，Annotation Processing 是在解析和生成之间的一个步骤。具体详细步骤如下：
-
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/895c6a32585543d6987f07d855f5398f~tplv-k3u1fbpfcp-watermark.image)
-
-上图是 Lombok 处理流程，在Javac 解析成抽象语法树之后(AST), Lombok 根据自己的注解处理器，动态的修改 AST，增加新的节点(所谓代码)，最终通过分析和生成字节码。
+Lombok 处理流程，在Javac 解析成抽象语法树之后(AST), Lombok 根据自己的注解处理器，动态的修改 AST，增加新的节点(所谓代码)，最终通过分析和生成字节码。
 
 自从Java 6起，javac就支持“JSR 269 Pluggable Annotation Processing API”规范，只要程序实现了该API，就能在javac运行的时候得到调用。
 
@@ -114,11 +108,9 @@ lombok能够达到的效果就是在源码中不需要写一些通用的方法�
 
 ## 四、自定义支持JSR269的注解
 
-一般javac的编译过程，java文件首先通过进行解析构建出一个AST，然后执行注解处理，最后经过分析优化生成二进制的.class文件。**我们能做到的是，在注解处理阶段进行一些相应处理**。首先我们在META-INF.services下创建如下文件：
+一般javac的编译过程，java文件首先通过进行解析构建出一个AST，然后执行注解处理，最后经过分析优化生成二进制的.class文件。**我们能做到的是，在注解处理阶段进行一些相应处理**。
 
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/988bc2e2c26f49448b1f3aa2f834b5c6~tplv-k3u1fbpfcp-watermark.image)
-
-**文件中指定我们的注解处理器：`com.alipay.kris.other.lombok.MyAnnotaionProcessor`**，然后我们接可以编写自己的注解处理器，一个简单的实例代码如下：
+**指定我们的注解处理器：`com.alipay.kris.other.lombok.MyAnnotaionProcessor`**，然后我们接可以编写自己的注解处理器，一个简单的实例代码如下：
 
 ```
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -172,8 +164,8 @@ public class FirstController {
 }
 
 ```
-2. @Data 使用:
-
+2. 简化我们的代码:
+*例如 @Data 使用:
 **1)、@Data可以为类提供读写功能，从而不用写get、set方法。
 **2)、他还会为类提供 equals()、hashCode()、toString() 方法。
 
