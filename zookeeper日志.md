@@ -43,7 +43,7 @@ oa = BinaryOutputArchive.getArchive(logStream);
 
 既然是二进制日志文件，那么我们直接打开该文件肯定是乱码嘛！怎么办呢？下面提供两种方法，这两种方法都是基于`zookeeper`提供的`LogFormatter.java`工具类来实现的。
 
-*   1、在`eclipse`中开该类，然后运行该类的`main`方法的同时传入你想查看的日志文件路径即可
+*   1、在`idea`中开该类，然后运行该类的`main`方法的同时传入你想查看的日志文件路径即可
 *   2、采用命令行`java -classpath xxx.jar org.apache.zookeeper.server.LogFormatter logFilePath`的形式进行查看
 
 第一种方式：
