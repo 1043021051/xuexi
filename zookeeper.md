@@ -15,7 +15,6 @@
 log4j:WARN No appenders could be found for logger (org.apache.log4j.jmx.HierarchyDynamicMBean).
 log4j:WARN Please initialize the log4j system properly.
 log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
-复制代码
 ```
 
 因此，必须将`log4j.properties`放到类路径下,所以将`conf`目录下的`log4j.properties`拷贝一份至上图的目录中即可！
@@ -33,7 +32,6 @@ fos = new FileOutputStream(logFileWrite);
 logStream=new BufferedOutputStream(fos);
 // 这是重点，这里采用org.apache.jute.BinaryOutputArchive二进制构件对logStream进行包裹，输出二进制数据
 oa = BinaryOutputArchive.getArchive(logStream);
-复制代码
 ```
 
 对应的文件系统的文件如下图：
