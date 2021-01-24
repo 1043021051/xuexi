@@ -7,7 +7,7 @@
 
 `事务日志 :` 顾名思义，就是用于存放事务执行的相关信息，如`zxid`、`cxid`等。至于什么是`zookeeper`事务，放到后面的文章中讲。
 
-`快照日志 : ``zookeeper`数据节点数据是运行在内存中的，当然内存保存这些结点的数据不可能无限大，而且数据节点的内容是动态变化的，因此`zookeeper`提供一中奖数据节点持久化的机制，每隔一段时间，`zookeeper`会将内存中的数据节点`DataTree`序列到磁盘中，因此就形成了我们的快照日志。
+`快照日志 : `zookeeper`数据节点数据是运行在内存中的，当然内存保存这些结点的数据不可能无限大，而且数据节点的内容是动态变化的，因此`zookeeper`提供一中奖数据节点持久化的机制，每隔一段时间，`zookeeper`会将内存中的数据节点`DataTree`序列到磁盘中，因此就形成了我们的快照日志。
 
 在`zookeeper`源码调试的过程中，诸如服务端的启动日志、客户端的启动日志、请求的相关日志，由于`zookeeper`采用`log4j`进行日志打印，因此`log4j`必须在类路径下查找`log4j.properties`文件，如果启动的过程中找不到该文件，则报错如下：
 
@@ -18,11 +18,7 @@ log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more in
 复制代码
 ```
 
-因此，必须将`log4j.properties`放到类路径下，那么对于可恶的`ant`工程，类路径在哪里呢？我也不清楚，于是我直接在`eclipse`右键工程`Build Path`->`Configure build path`找到类路径为`%baseDir%\src\java\main`,具体如下图：
-
-![](https://user-gold-cdn.xitu.io/2018/4/30/163169a1b1933497?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
-
-所以将`conf`目录下的`log4j.properties`拷贝一份至上图的目录中即可！
+因此，必须将`log4j.properties`放到类路径下,所以将`conf`目录下的`log4j.properties`拷贝一份至上图的目录中即可！
 
 ### 二、`zookeeper`日志可视化
 
@@ -139,9 +135,3 @@ protected void initializeAndRun(String[] args)
 复制代码
 ```
 
-现在原理一目了然了，日志源码分析就先到这了，同时你也阅读完了，非常棒！欢迎评论区留言，多多交流！
-
-作者：拥抱心中的梦想
-链接：https://juejin.cn/post/6844903600351608840
-来源：掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
