@@ -1,3 +1,7 @@
+zookeeper源码分析
+----
+
+
 ### 一、`zookeeper`日志类型
 
 `zookeeper`中有两类日志,分别是：
@@ -34,10 +38,6 @@ logStream=new BufferedOutputStream(fos);
 oa = BinaryOutputArchive.getArchive(logStream);
 ```
 
-对应的文件系统的文件如下图：
-
-![](https://user-gold-cdn.xitu.io/2018/4/30/16316a35b9ba6361?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
-
 既然是二进制日志文件，那么我们直接打开该文件肯定是乱码嘛！怎么办呢？下面提供两种方法，这两种方法都是基于`zookeeper`提供的`LogFormatter.java`工具类来实现的。
 
 *   1、在`eclipse`中开该类，然后运行该类的`main`方法的同时传入你想查看的日志文件路径即可
@@ -45,19 +45,17 @@ oa = BinaryOutputArchive.getArchive(logStream);
 
 第一种方式：
 
-这里假设我的日志文件存放路径为`E:\\resources\\zookeeper-3.4.11\\conf\\log\\version-2\\log.1`，当我在`eclipse`中运行`main`方法时，设置传入的参数即可，如下图：
-
-![](https://user-gold-cdn.xitu.io/2018/4/30/16316a85ed9045cc?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+这里假设我的日志文件存放路径为`E:\\resources\\zookeeper-3.4.11\\conf\\log\\version-2\\log.1`，当我运行`main`方法时，如下图：
 
 然后就可以在控制台输出日志了，输出样例如下：
 
 ```
 ZooKeeper Transactional Log File with dbid 0 txnlog format version 2
-18-4-30 下午08时39分23秒 session 0x100022b44190000 cxid 0x0 zxid 0x1 createSession 30000
+21-1-23 下午08时39分23秒 session 0x100022b44190000 cxid 0x0 zxid 0x1 createSession 30000
 
-18-4-30 下午08时39分55秒 session 0x100022b44190000 cxid 0x0 zxid 0x2 closeSession null
+21-1-23 下午08时39分55秒 session 0x100022b44190000 cxid 0x0 zxid 0x2 closeSession null
 EOF reached after 2 txns.
-复制代码
+
 ```
 
 第二种方式：
@@ -66,9 +64,6 @@ EOF reached after 2 txns.
 
 其中两个`jar`包之间采用分号`;`分隔而不是冒号，`org.apache.zookeeper.server.LogFormatter`表示`LogFormatter.java`的全路径命名(`即包全名+类名`),`E:\\resources\\zookeeper-3.4.11\\conf\\log\\version-2\\log.1`表示你想查看的日志文件。
 
-输出如下：
-
-![](https://user-gold-cdn.xitu.io/2018/5/1/16319c4653094f7c?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
 ### 三、`zookeeper`日志清理机制
 
@@ -102,7 +97,7 @@ protected void initializeAndRun(String[] args)
             ZooKeeperServerMain.main(args);
         }
     }
-复制代码
+
 ```
 
 你可以在配置文件`zoo.cfg`文件中增加两个配置，分别是`autopurge.snapRetainCount`和`autopurge.snapRetainCount` 。`autopurge.purgeInterval`就是设置多少小时清理一次。而`autopurge.snapRetainCount`是设置保留多少个`快照文件snapshot`，之前的多有都删除。
@@ -130,6 +125,5 @@ protected void initializeAndRun(String[] args)
         timer.scheduleAtFixedRate(task, 0, TimeUnit.HOURS.toMillis(purgeInterval));
         purgeTaskStatus = PurgeTaskStatus.STARTED;
     }
-复制代码
 ```
 
